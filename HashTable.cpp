@@ -69,22 +69,20 @@ void HashTable::print()
 		std::cout << i << ": ";
 		int temp_size = innerhash[i].size();
 		for (int j = 0; j < temp_size; j++) {
-			if(innerhash[i][j]!=NULL)
+			if(!isnan(innerhash[i][j]))
 				std::cout << innerhash[i][j] << " ";
 		}
 		std::cout << '\n';
 	}
 
-	std::cout << '\n';
-	std::cout << '\n';
-	int j = 0;
-	for (int i = 0; i < 3 * (sizev + 1); i++) {
-		if (i % 3 == 0) {
+	int s = 0;
+	for (int k = 0; k < 3 * (sizev + 1); k++) {
+		if (k % 3 == 0) {
 			std::cout << '\n';
-			std::cout << "Coefs " << j << " : ";
-			j++;
+			std::cout << "Coefs " << s << " : ";
+			s++;
 		}
-		std::cout << coefs[i]<<" ";
+		std::cout << coefs[k]<<" ";
 		
 	}
 }
@@ -96,14 +94,17 @@ bool HashTable::perfect_rehash()
 			bool collision_flag = false;
 			int prime_change = 0;
 			while (!collision_flag) {
-				std::vector<double> newvec = std::vector<double>(innerhash[i].size() * innerhash[i].size());
-				change_constants(3*(i+1),newvec.size(),innerhash[i].size()+prime_change);
+				int sizet = innerhash[i].size();
+				std::vector<double> newvec;
+				newvec.resize(sizet*sizet, NAN);
+				for(int c=0;c< sizet* sizet;c++)
+				change_constants(3*(i+1), sizet, sizet +prime_change);
 				collision_flag = true;
-				for (int l = 0; l < innerhash[i].size(); l++) {
+				for (int l = 0; l < sizet; l++) {
 					int temp_index = hashFunction(innerhash[i][l],3*(i+1),newvec.size());
-					if (newvec[temp_index]!=NULL ) {
+					if (!isnan(newvec[temp_index])) {
 						collision_flag = false;
-						std::cout << "a: " << coefs[3 * (i + 1)] << "   b: " << coefs[3 * (i + 1) + 1] << "   c:" << coefs[3 * (i + 1) + 2] <<std::endl;
+						//std::cout << "a: " << coefs[3 * (i + 1)] << "   b: " << coefs[3 * (i + 1) + 1] << "   c:" << coefs[3 * (i + 1) + 2] <<std::endl;
 						break;
 						
 					}
@@ -147,18 +148,19 @@ bool HashTable::hash(std::vector<double> numbers)
 void HashTable::searchelem(double elem)
 {
 	int index1 = hashFunction(elem,0,sizev);
-	if (innerhash[index1].size() == 0) {
+	int sizet = innerhash[index1].size();
+	if (sizet == 0) {
 		std::cout << '\n';
 		std::cout << "No such number" << '\n';
 		std::cout << '\n';
 		return;
 	}
 	int index2 = 0;
-	if (innerhash[index1].size()>1) {
-		index2 = hashFunction(elem, 3*(index1+1), innerhash[index1].size());
+	if (sizet >1) {
+		index2 = hashFunction(elem, 3*(index1+1), sizet);
 	}
 	
-	if (innerhash[index1].size()!=0 && innerhash[index1][index2] == elem) {
+	if (sizet !=0 && innerhash[index1][index2] == elem) {
 		std::cout << '\n';
 		std::cout << "Number is located at : ";
 		std::cout << index1 << " " << index2;

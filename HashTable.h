@@ -8,6 +8,7 @@ class HashTable {
 	std::vector<double>* innerhash;
 	std::size_t sizev;
 	int* coefs;
+
 	int hashFunction(double key, int n,size_t size);
 	bool perfect_rehash();
 	void change_constants(int s,int size,int to_prime);
@@ -16,6 +17,8 @@ public:
 	~HashTable() {
 		delete []innerhash;
 		delete []coefs;
+		this->innerhash = nullptr;
+		this->coefs = nullptr;
 	}
 	void print();
 	bool hash(std::vector<double> numbers);
