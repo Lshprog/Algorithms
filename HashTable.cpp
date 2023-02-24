@@ -11,7 +11,7 @@ void remove_duplicates(std::vector<double>& vec)
 std::pair<int, int> reduction(double number) {
 
 	int wholepart = int(number);
-	int decimalpart = int((number - wholepart) * pow(10, 3));
+	int decimalpart = int((number - wholepart) * pow(10, 4));
 	return std::pair<int, int>(wholepart, decimalpart);
 
 }
@@ -44,13 +44,21 @@ HashTable::HashTable(std::vector<double>& vec) {
 	for (int i = 0; i < 3 * (sizev + 1); i++) {
 		coefs[i] = 0;
 	}
+	srand(time(0));
 }
 
 
 int HashTable::hashFunction(double key,int s,size_t size)
 {
 	std::pair<int,int> value = reduction(key);
-	int index = ((value.first * coefs[0+s] + value.second * coefs[1+s]) % coefs[2+s]) % size;
+	int tempsize = size;
+	int signindex = key > 0 ? 0 : 1;
+	
+	int index = ((abs(value.first) * coefs[0+s] + abs(value.second) * coefs[1+s]) % coefs[2+s]+signindex) % tempsize;
+
+	/*std::cout << '\n';
+	std::cout << coefs[0 + s] << " " << coefs[1 + s] << " " << coefs[2 + s] << " " << size << " " << value.first<<"    index: "<<index;
+	std::cout << '\n';*/
 
 	return index;
 }
@@ -69,9 +77,15 @@ void HashTable::print()
 
 	std::cout << '\n';
 	std::cout << '\n';
-
+	int j = 0;
 	for (int i = 0; i < 3 * (sizev + 1); i++) {
-		std::cout << " " << coefs[i];
+		if (i % 3 == 0) {
+			std::cout << '\n';
+			std::cout << "Coefs " << j << " : ";
+			j++;
+		}
+		std::cout << coefs[i]<<" ";
+		
 	}
 }
 
@@ -110,9 +124,9 @@ bool HashTable::perfect_rehash()
 
 void HashTable::change_constants(int s,int size,int to_prime)
 {
-	coefs[s + 2] = find_next_prime(to_prime);
+	coefs[s + 2] = find_next_prime(pow(to_prime,2));
 	coefs[s + 0] = rand()%size;
-	coefs[s + 1] = rand()%size + 3;
+	coefs[s + 1] = rand()%size*rand()%size;
 }
 
 bool HashTable::hash(std::vector<double> numbers)
