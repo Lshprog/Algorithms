@@ -35,7 +35,6 @@ int find_next_prime(int val) {
 	return newv;
 }
 
-
 HashTable::HashTable(std::vector<double>& vec) {
 	remove_duplicates(vec);
 	sizev = vec.size();
@@ -47,6 +46,10 @@ HashTable::HashTable(std::vector<double>& vec) {
 	srand(time(0));
 }
 
+HashTable::~HashTable() {
+	delete[]innerhash;
+	delete[]coefs;
+}
 
 int HashTable::hashFunction(double key,int s,size_t size)
 {
@@ -54,7 +57,7 @@ int HashTable::hashFunction(double key,int s,size_t size)
 	int tempsize = size;
 	int signindex = key > 0 ? 0 : 1;
 	
-	int index = ((abs(value.first) * coefs[0+s] + abs(value.second) * coefs[1+s]) % coefs[2+s]+signindex) % tempsize;
+	int index = ((abs(value.first) * coefs[0+s] + abs(value.second) * coefs[1+s] + signindex) % coefs[2+s]) % tempsize;
 
 	/*std::cout << '\n';
 	std::cout << coefs[0 + s] << " " << coefs[1 + s] << " " << coefs[2 + s] << " " << size << " " << value.first<<"    index: "<<index;
@@ -71,6 +74,9 @@ void HashTable::print()
 		for (int j = 0; j < temp_size; j++) {
 			if(!isnan(innerhash[i][j]))
 				std::cout << innerhash[i][j] << " ";
+			else {
+				std::cout<<" . ";
+			}
 		}
 		std::cout << '\n';
 	}
@@ -94,6 +100,10 @@ bool HashTable::perfect_rehash()
 			bool collision_flag = false;
 			int prime_change = 0;
 			while (!collision_flag) {
+				if (prime_change > 30) {
+					std::cout << "ERROR!!! Over precision!!";
+					return false;
+				}
 				int sizet = innerhash[i].size();
 				std::vector<double> newvec;
 				newvec.resize(sizet*sizet, NAN);
@@ -135,6 +145,8 @@ bool HashTable::hash(std::vector<double> numbers)
 	if (numbers.size() < 1)
 		return false;
 	change_constants(0,sizev,sizev);
+
+	
 
 	for (int i = 0; i < sizev; i++) {
 		int index = hashFunction(numbers[i], 0, sizev);
