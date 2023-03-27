@@ -24,9 +24,8 @@ public:
 	int getRp() {
 		return this->rp;
 	}
-
 	
 	
 };
 
-bool compare_complex(ComplexNumber* num1,ComplexNumber* num2);
+int compare_complex(ComplexNumber num1,ComplexNumber num2);
