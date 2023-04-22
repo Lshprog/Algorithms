@@ -1,0 +1,112 @@
+#pragma once
+#include "..\AA_tree_complexnumbers\AAtree.h"
+#include <vector>
+
+template <typename DataType>
+class OBST :public BST<Node<DataType>>{
+public:
+
+	int len;
+	int** costtable;
+	int** roottable;
+
+
+	OBST(std::vector<std::pair<DataType,int>>& invec) {
+		
+		int len = invec.size();
+
+		costtable = new int*[len + 1];
+		roottable = new int* [len];
+
+		for (int i = 0; i <= len; i++) {
+			costtable[i] = new int[len+1];
+			costtable[i][i] = 0;
+			if (i < len) {
+				costtable[i][i + 1] = invec[i].second;
+				roottable[i] = new int[len];
+				roottable[i][i] = i;
+			}
+		}
+
+		this->len = len;
+
+		calculateOptimum();
+		this->root = constructTree(invec,0,len-1);
+
+		this->printTreeOut(this->root);
+
+		std::cout << std::endl;
+
+		this->print(this->root);
+	}
+
+	~OBST() {
+		for (int i = 0; i <= len; i++) {
+			delete []costtable[i];
+			if(i<len)
+				delete []roottable[i];
+		}
+
+		delete []costtable;
+		delete []roottable;
+
+	}
+
+
+
+
+	void calculateOptimum() {
+
+		for (int d = 1; d < this->len; d++) {
+			for (int i = 0; i < this->len - d; i++) {
+				int j = d + i + 1;
+				int min = INT_MAX;
+
+				for (int l = i; l < j; l++) {
+					int q = costtable[i][l] + costtable[l+1][j];
+					if (q < min) {
+						min = q;
+						roottable[i][j-1] = l;
+					}
+				}
+
+				int sum = 0;
+				for (int t = i; t < j; t++) {
+					sum+=costtable[t][t+1];
+				}
+
+				costtable[i][j] = min + sum;
+			}
+		}
+
+
+	}
+
+	Node<DataType>* constructTree(std::vector<std::pair<DataType, int>>& invec,int lefts, int rights) {
+
+		int index = roottable[lefts][rights];
+
+		Node<DataType>* node = new Node<DataType>(invec[index].first);
+
+		if (lefts == rights) {
+			return node;
+		}
+		if (index != rights) {
+			node->right = constructTree(invec,index+1,rights);
+			if (node->right != nullptr)
+				node->right->parent = node;
+		}
+		if (index != lefts) {
+			node->left = constructTree(invec, lefts, index-1);
+			if (node->left != nullptr)
+				node->left->parent = node;
+		}
+		
+		return node;
+
+
+	}
+
+
+
+};
