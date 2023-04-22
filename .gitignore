@@ -118,7 +118,7 @@ ipch/
 *.vspx
 *.sap
 
-.vs/
+AA_tree_complexnumbers.vs/
 
 # Visual Studio Trace Files
 *.e2e
