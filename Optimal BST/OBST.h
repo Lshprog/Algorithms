@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "..\AA_tree_complexnumbers\AAtree.h"
 #include <vector>
 
@@ -6,55 +6,60 @@ template <typename DataType>
 class OBST :public BST<Node<DataType>>{
 public:
 
-	int len;
-	int** costtable;
-	int** roottable;
+	int len;//Кількість елементів у вхідному масиві.
+	int** costtable;//таблиця цін
+	int** roottable;//таблиця коренів
 
-
+	//Конструктор класу
 	OBST(std::vector<std::pair<DataType,int>>& invec) {
 		
 		int len = invec.size();
 
-		costtable = new int*[len + 1];
-		roottable = new int* [len];
+		if (len == 0)
+			std::cout << "Empty tree" << std::endl;
 
-		for (int i = 0; i <= len; i++) {
-			costtable[i] = new int[len+1];
-			costtable[i][i] = 0;
-			if (i < len) {
-				costtable[i][i + 1] = invec[i].second;
-				roottable[i] = new int[len];
-				roottable[i][i] = i;
+		else {
+			costtable = new int* [len + 1];
+			roottable = new int* [len];
+
+			for (int i = 0; i <= len; i++) {
+				costtable[i] = new int[len + 1];
+				costtable[i][i] = 0;
+				if (i < len) {
+					costtable[i][i + 1] = invec[i].second;
+					roottable[i] = new int[len];
+					roottable[i][i] = i;
+				}
 			}
+
+			this->len = len;
+
+			calculateOptimum();
+			this->root = constructTree(invec, 0, len - 1);
+
+			//this->printTreeOut(this->root);
+			std::cout << "Cost: " << costtable[0][len]<<std::endl;
+			std::cout << std::endl;
+
+			this->print(this->root);
 		}
-
-		this->len = len;
-
-		calculateOptimum();
-		this->root = constructTree(invec,0,len-1);
-
-		this->printTreeOut(this->root);
-
-		std::cout << std::endl;
-
-		this->print(this->root);
 	}
 
+	//Деструктор класу
 	~OBST() {
-		for (int i = 0; i <= len; i++) {
-			delete []costtable[i];
-			if(i<len)
-				delete []roottable[i];
+		if (len != 0) {
+			for (int i = 0; i <= len; i++) {
+				delete[]costtable[i];
+				if (i < len)
+					delete[]roottable[i];
+			}
 		}
-
 		delete []costtable;
 		delete []roottable;
 
 	}
 
-
-
-
+	//Функція заповнення таблиць
 	void calculateOptimum() {
 
 		for (int d = 1; d < this->len; d++) {
@@ -82,6 +87,7 @@ public:
 
 	}
 
+	//Функція побудови дерева за таблицею
 	Node<DataType>* constructTree(std::vector<std::pair<DataType, int>>& invec,int lefts, int rights) {
 
 		int index = roottable[lefts][rights];
@@ -110,3 +116,4 @@ public:
 
 
 };
+
