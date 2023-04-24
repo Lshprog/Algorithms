@@ -5,11 +5,6 @@
 template <typename DataType>
 class OBST :public BST<Node<DataType>>{
 public:
-
-	int len;//Кількість елементів у вхідному масиві.
-	int** costtable;//таблиця цін
-	int** roottable;//таблиця коренів
-
 	//Конструктор класу
 	OBST(std::vector<std::pair<DataType,int>>& invec) {
 		
@@ -113,6 +108,11 @@ public:
 
 	}
 
+
+	private:
+		int len;//Кількість елементів у вхідному масиві.
+		int** costtable;//таблиця цін
+		int** roottable;//таблиця коренів
 
 
 };
