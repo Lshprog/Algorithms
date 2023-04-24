@@ -63,7 +63,6 @@ public:
 template<typename NodeType>
 class BST {
 public:
-	NodeType* root;
 	BST() {
 		this->root = nullptr;
 	}
@@ -212,6 +211,7 @@ public:
         else
             return 1;
     } 
+
     //Вивід дерева
     virtual void printTreeOut(NodeType* node) {
         if (node != nullptr) {
@@ -220,6 +220,7 @@ public:
             printTreeOut(node->right);
         }
     } 
+
     void print(const std::string& prefix, const NodeType* node, bool isLeft, bool isRoot)
     {
         if (node != nullptr)
@@ -240,13 +241,14 @@ public:
         }
     }
 
-
     void print(const NodeType* node)
     {
         print("", node, false, true);
     }
 
 
+   public:
+       NodeType* root;
 
 
 };
