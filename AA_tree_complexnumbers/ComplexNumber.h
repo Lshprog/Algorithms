@@ -31,19 +31,19 @@ public:
 	}
 	
 	
-	bool operator>(ComplexNumber num2) {
+	bool operator>(const ComplexNumber& num2) const {
 		if (compare_complex(*this, num2) == 1)
 			return true;
 		return false;
 	}
 
-	bool operator<(ComplexNumber num2) {
+	bool operator<(const ComplexNumber& num2) const{
 		if (compare_complex(*this, num2) == 0)
 			return true;
 		return false;
 	}
 
-	bool operator==(ComplexNumber num2) {
+	bool operator==(const ComplexNumber& num2) const{
 		if (compare_complex(*this, num2) == 2)
 			return true;
 		return false;
