@@ -12,6 +12,17 @@
 namespace FFT{
 
 	template<typename Complex>
+	void calcRootsOfUnity(const std::vector<Complex> coefs, std::vector<Complex>& w, const int n) {
+
+		for (int i = 0; i < n; i++) {
+			double alpha = -2 * PI * i / n;
+			w[i] = Complex(cos(alpha), sin(alpha));
+		}
+
+	}
+
+
+	template<typename Complex>
 	std::vector<Complex> fft(std::vector<Complex>& coefs) {
 		
 		int n = coefs.size();
@@ -21,10 +32,7 @@ namespace FFT{
 
 		std::vector<Complex> w(n);
 
-		for (int i = 0; i < n; i++) {
-			double alpha = -2 * PI * i / n;
-			w[i] = Complex(cos(alpha), sin(alpha));
-		}
+		calcRootsOfUnity(coefs,w,n);
 
 		std::vector<Complex> A0(n / 2), A1(n / 2);
 
