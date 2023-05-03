@@ -42,7 +42,7 @@ namespace MT_FFT {
 			std::future<std::vector<Complex>> handle2 = std::async(std::launch::async, std::ref(fftmultithread<Complex>), std::ref(A1), std::ref(current_thread_amount), max_threads);
 			{
 				std::lock_guard<std::mutex> lock(mut);
-				current_thread_amount *= 2;
+				current_thread_amount += 2;
 			}
 
 			FFT::calcRootsOfUnity<Complex>(coefs, w, n);
