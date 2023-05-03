@@ -13,8 +13,6 @@ TEST_CASE("Testing Fast Fourier Transform alogrithms") {
     int numberofiter = 25;
     
         for (int i = 0; i < numberofiter; i++) {
-            //std::cout << "2 power of : " << i << std::endl;
-
             std::cout << std::endl;
 
             std::vector<cd> a = getRandomVec(pow(2, i));
