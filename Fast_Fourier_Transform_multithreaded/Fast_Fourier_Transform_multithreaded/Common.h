@@ -8,6 +8,8 @@
 #include "fftmultithread.h"
 #include "ThreadPool.h"
 
+typedef std::complex<double> cd;
+
 std::vector<std::complex<double>> getRandomVec(int n, int mod = 10) {
 
 	std::vector<std::complex<double>> result;
@@ -17,4 +19,12 @@ std::vector<std::complex<double>> getRandomVec(int n, int mod = 10) {
 	}
 
 	return result;
+}
+
+bool compareComplexVec(const std::vector<cd>& a1,const std::vector<cd>& a2 ){
+	for (int i = 0; i < a1.size(); i++) {
+		if ((std::real(a1[i]) - std::real(a2[i]) > 0.01) || (std::imag(a1[i]) - std::imag(a2[i]) > 0.01))
+			return false;
+	}
+	return true;
 }
